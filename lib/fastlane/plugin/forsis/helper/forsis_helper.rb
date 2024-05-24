@@ -12,7 +12,8 @@ module Fastlane
             xml.testExecutions({ version: :'1' }) do
               test_suites.each do |test_file|
                 file_name = `echo #{test_file["name"]}| cut -d'.' -f 2`.gsub(/\n/, '')
-                file_path = get_test_file_path(file_name)
+                file_target = `echo #{file_output}| cut -d'.' -f 1`.gsub(/\n/, '')
+                file_path = get_test_file_path(file_name, file_target)
                 test_cases = []
                 test_file.children.each do |child|
                   test_cases << child if child.instance_of?(Nokogiri::XML::Element)
@@ -41,8 +42,8 @@ module Fastlane
           sonarqube_file.close
         end
 
-        def self.get_test_file_path(file_name)
-          `find . -iname "#{file_name}.swift"`.gsub(/\n/, '')
+        def self.get_test_file_path(file_name, file_target)
+          `find #{file_target} -iname "#{file_name}.swift"`.gsub(/\n/, '')
         end
       end
 
