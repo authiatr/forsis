@@ -12,7 +12,7 @@ module Fastlane
             xml.testExecutions({ version: :'1' }) do
               test_suites.each do |test_file|
                 file_name = `echo #{test_file["name"]}| cut -d'.' -f 2`.gsub(/\n/, '')
-                file_target = `echo #{file_output}| cut -d'.' -f 1`.gsub(/\n/, '')
+                file_target = `echo #{test_file["name"]}| cut -d'.' -f 1`.gsub(/\n/, '')
                 file_path = get_test_file_path(file_name, file_target)
                 test_cases = []
                 test_file.children.each do |child|
