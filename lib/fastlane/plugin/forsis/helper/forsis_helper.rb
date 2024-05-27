@@ -4,7 +4,7 @@ module Fastlane
   module Helper
     module ForsisHelper
       class Generator
-        def self.generate(junit_report_path, sonarqube_report_path)
+        def self.generate(junit_report_path, sonarqube_report_path, search_in_target_folder)
           junit_file = Nokogiri::XML(File.open(junit_report_path))
           sonarqube_file = File.open("#{sonarqube_report_path}/Test_sonarqube_report.xml", 'w')
           test_suites = junit_file.xpath("//testsuite")
@@ -12,8 +12,14 @@ module Fastlane
             xml.testExecutions({ version: :'1' }) do
               test_suites.each do |test_file|
                 file_name = `echo #{test_file["name"]}| cut -d'.' -f 2`.gsub(/\n/, '')
-                file_target = `echo #{test_file["name"]}| cut -d'.' -f 1`.gsub(/\n/, '')
-                file_path = get_test_file_path(file_name, file_target)
+
+                if search_in_target_folder then
+                  file_target = `echo #{test_file["name"]}| cut -d'.' -f 1`.gsub(/\n/, '')
+                  file_path = get_test_file_path(file_name, file_target)
+                else 
+                  file_path = get_test_file_path(file_name, ".")
+                end
+
                 test_cases = []
                 test_file.children.each do |child|
                   test_cases << child if child.instance_of?(Nokogiri::XML::Element)

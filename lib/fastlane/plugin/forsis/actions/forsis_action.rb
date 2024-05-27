@@ -7,8 +7,9 @@ module Fastlane
       def self.run(params)
         junit_report_path = params[:junit_report_file]
         sonarqube_report_path = params[:sonar_report_directory]
+        search_in_target_folder = params[:search_in_target_folder]
         UI.message("Generating the Sonarqube generic test execution report!")
-        Fastlane::Helper::ForsisHelper::Generator.generate(junit_report_path, sonarqube_report_path)
+        Fastlane::Helper::ForsisHelper::Generator.generate(junit_report_path, sonarqube_report_path, search_in_target_folder)
       end
 
       def self.description
@@ -46,6 +47,14 @@ module Fastlane
             verify_block: proc do |path|
               FileUtils.mkdir_p(path) unless File.directory?(path)
             end
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :search_in_target_folder,
+            env_name: "forsis_SEARCH_IN_TARGET_FOLDER",
+            description: "Weither the plugin should search in the class' target folder or in all project's folders",
+            optional: true,
+            default_value: false,
+            is_string: false
           )
         ]
       end
