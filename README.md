@@ -30,7 +30,7 @@ lane :sonarqube_test_report do
 	forsis(
 	    junit_report_file: './fastlane/report.junit',
 	    sonar_report_directory: 'path_to_a_directory_to_store_sonarqube_report',
-      search_in_target_folder: true # optional
+	    search_in_target_folder: true # optional
     )
 end
  ```
